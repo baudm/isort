@@ -17,6 +17,9 @@ def import_statement(
     explode: bool = False,
 ) -> str:
     """Returns a multi-line wrapped form of the provided from import statement."""
+    fmt_skip = "fmt: skip"
+    # Remove existing fmt: skip comments to avoid duplicates
+    comments = list(c for c in comments if c != fmt_skip)
     if explode:
         formatter = vertical_hanging_indent
         line_length = 1
@@ -65,7 +68,7 @@ def import_statement(
             lines = new_import_statement.split(line_separator)
     if statement.count(line_separator) == 0:
         return _wrap_line(statement, line_separator, config)
-    return statement
+    return statement + f"{config.comment_prefix} {fmt_skip}"
 
 
 def line(content: str, line_separator: str, config: Config = DEFAULT_CONFIG) -> str:
